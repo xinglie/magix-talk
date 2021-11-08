@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <link type="image/x-icon" href="//img.alicdn.com/imgextra/i2/O1CN01sWqSUf1ROIqkisUFe_!!6000000002101-55-tps-105-90.svg" rel="shortcut icon">
+        <title>Maix Talk</title>
+        <style>
+        *,*::before,*::after{box-sizing:border-box}
+        a,a:visited{color:#FA742B;text-decoration:none}
+        a:hover{text-decoration:underline}
+        html,body{margin:0;padding:0;font-size:14px;line-height:1.5;font-family: Arial, sans-serif;min-width:800px}
+        .head{position:fixed;background:#FA742B;color:#fff;height:40px;display:flex;align-items:center;left:0;top:0;right:0}
+        .logo{width:30px;height:30px}
+        .site-name{font-size:16px;margin-left:8px}
+        .site-desc{font-size:12px;margin-left:4px}
+        .features{margin:50px 20px;display:grid;gap:40px;display:grid;grid-template-columns:repeat(3,1fr)}
+        .foot{background:#fafafa;border-top:solid 1px #ccc;padding:0 10px;color:#999;font-size:12px;position:fixed;left:0;bottom:0;right:0}
+        .card{background:#f9f9f9;border-radius:5px;padding:10px}
+        .f-title{font-size:18px;color:#FA742B;margin-bottom:10px}
+        .f-desc{color:#666}
+        .api{margin:0 20px;}
+        .mt-10px{margin-top:10px}
+        .mb-50px{margin-bottom:50px}
+        .ml-10px{margin-left:10px}
+        .display-flex{display:flex}
+        .align-items-center{align-items:center}
+        .select{width:200px;height:25px}
+        </style>
+    </head>
+    <body>
+        <div class="head">
+            <svg class="logo" viewBox="0 0 1191 1024"><path d="M537.756 175.44l254.083 486.174L334.605 962zM820.2 627.466L684.185 367.595l244.824-160.9zM504.764 164.444L189.91 62l234.984 410.932zM343.286 788.945L62 787.21 303.93 942.9zM907.016 351.39l202.572-56.142L942.9 213.64z" fill="#fff"/></svg>
+            <div class="site-name">
+                Magix Talk
+            </div>
+            <div class="site-desc">
+                即时通信网页版解决方案
+            </div>
+        </div>
+        <div class="features">
+            <div class="card">
+                <div class="f-title">使用方便</div>
+                <div class="f-desc">单人、群、陌生人均可以随时聊天，陌生人支持自动弹出聊天窗口。</div>
+            </div>
+            <div class="card">
+                <div class="f-title">功能完整</div>
+                <div class="f-desc">己方消息缓存，己方消息失败重试。消息未读提示，切换、消息展示在底部时自动滚屏，面板最小化有消息闪烁，重大异常自动锁屏等。</div>
+            </div>
+            <div class="card">
+                <div class="f-title">草稿</div>
+                <div class="f-desc">聊天窗口随时切换，己方输入的内容自动保存，切换后自动还原，包括光标位置，内容选中等，还原到您切换前的状态，可在下方API区域尝试下哦～</div>
+            </div>
+            <div class="card">
+                <div class="f-title">消息丰富</div>
+                <div class="f-desc">支持文本、图片、视频、音频、投票等各种常见消息类型，消息支持插件化的解析，可扩展任意想要的消息类型</div>
+            </div>
+            <div class="card">
+                <div class="f-title">“无界面”开发模式</div>
+                <div class="f-desc">整体项目采用“无界面”开发模式，开发好的对象即是对外接口。通过抽离界面与业务逻辑层，后期可任意对接如移动、小程序等界面。<a href="https://github.com/xinglie/xinglie.github.io/issues/90" target="_blank" rel="noopener noreferrer">进一步了解“无界面”开发模式</a></div>
+            </div>
+            <div class="card">
+                <div class="f-title">接入方便</div>
+                <div class="f-desc">代码对底层要接入的socket或http均已抽象，只需要实现相应的接口即可完成对接。</div>
+            </div>
+        </div>
+        <div class="api">
+            <div class="card">
+                <div class="f-title">API-获取及同步用户、群列表</div>
+                <div class="display-flex align-items-center">
+                    <div>好友列表：</div>
+                    <select class="select" id="friends"></select>
+                    <div class="ml-10px">群列表：</div>
+                    <select class="select" id="groups"></select>
+                    <button class="ml-10px" id="random_targets">更新好友与群</button>
+                </div>
+            </div>
+        </div>
+        <div class="api mt-10px">
+            <div class="card">
+                <div class="f-title">API-打开聊天窗口</div>
+                <div class="display-flex align-items-center">
+                    <div>好友列表：</div>
+                    <select class="select" id="open_friends"></select>
+                    <button class="ml-10px" id="open_friends_trigger">打开</button>
+                    <div class="ml-10px">群列表：</div>
+                    <select class="ml-10px select" id="open_groups"></select>
+                    <button class="ml-10px" id="open_groups_trigger">打开</button>
+                </div>
+            </div>
+        </div>
+        <div class="api mt-10px">
+            <div class="card">
+                <div class="f-title">API-草稿功能</div>
+                <div class="display-flex align-items-center">
+                    <button id="draft">缓存草稿并打开查看</button>
+                </div>
+            </div>
+        </div>
+        <div class="api mt-10px">
+            <div class="card">
+                <div class="f-title">API-关闭聊天窗口</div>
+                <div class="display-flex align-items-center">
+                    <button id="close_current">关闭当前</button>
+                    <button class="ml-10px" id="close_all">关闭所有</button>
+                </div>
+            </div>
+        </div>
+        <div class="api mt-10px">
+            <div class="card">
+                <div class="f-title">API-向第一个用户发消息</div>
+                <div class="display-flex align-items-center">
+                    <button id="send_message">发送</button>
+                </div>
+            </div>
+        </div>
+        <div class="api mt-10px">
+            <div class="card">
+                <div class="f-title">API-第一个用户推送消息</div>
+                <div class="display-flex align-items-center">
+                    <button id="push_message">推送</button>
+                </div>
+            </div>
+        </div>
+        <div class="api mt-10px">
+            <div class="card">
+                <div class="f-title">API-模拟崩溃</div>
+                <div class="display-flex align-items-center">
+                    <button id="crash">崩溃</button>
+                </div>
+            </div>
+        </div>
+        <div class="api mt-10px mb-50px">
+            <div class="card">
+                <div class="f-title">API-性能测试</div>
+                <div class="display-flex align-items-center">
+                    <button id="targets_less">普通数量好友与群</button>
+                    <button class="ml-10px" id="targets_normal">中等数量好友与群</button>
+                    <button class="ml-10px" id="targets_more">千人好友与群</button>
+                    <button class="ml-10px" id="ms_low">普通消息更新频率</button>
+                    <button class="ml-10px" id="ms_normal">较快消息更新频率</button>
+                    <button class="ml-10px" id="ms_high">超快消息更新频率</button>
+                </div>
+            </div>
+        </div>
+        <div class="foot">&copy;2021 源代码开放中　加微信:　qq84685009　交流、获取源代码　(限视觉、前端及后端开发人员)</div>
+        <div id="app"></div>
+        <script src="https://www.unpkg.com/mockjs@1.0.1-beta3/dist/mock.js"></script>
+        <script src="dist/talk.js"></script>
+        <script type="module">
+        await MTalk.setup();
+        (() => {
+            let { Talk, Service } = MTalk;
+            let updateSelect = (target, list, textKey, valueKey) => {
+                let node = document.getElementById(target);
+                while (node.firstChild) {
+                    node.removeChild(node.firstChild);
+                }
+                for (let e of list) {
+                    let text = e,
+                        value = e;
+                    if (textKey) {
+                        text = e[textKey];
+                    }
+                    if (valueKey) {
+                        value = e[valueKey];
+                    }
+                    let option = document.createElement('option');
+                    option.text = text;
+                    option.value = value;
+                    node.appendChild(option);
+                }
+                node.disabled = false;
+            };
+            let getAndSyncTargets = () => {
+                let updateFriendsList = () => {
+                    let friends = Talk.getFriends();
+                    updateSelect('friends', friends, 'name', 'id');
+                };
+                let updateGroupsList = () => {
+                    let groups = Talk.getGroups();
+                    updateSelect('groups', groups, 'name', 'id');
+                };
+                let resume = () => {
+                    let basic = Talk.getBasic();
+                    if (basic) {
+                        if (basic.error) {
+                            updateSelect('friends', [basic.error]);
+                            updateSelect('groups', [basic.error]);
+                            document.getElementById('friends').disabled = true;
+                            document.getElementById('groups').disabled = true;
+                            document.getElementById('random_targets').disabled = true;
+                        } else {
+                            updateFriendsList();
+                            updateGroupsList();
+                            document.getElementById('random_targets').disabled = false;
+                            document.getElementById('random_targets').onclick = () => {
+                                Service.updateTargets();
+                            };
+                        }
+                    }
+                };
+                let basic = Talk.getBasic();
+                if (basic) {
+                    resume();
+                } else {
+                    Talk.on('basic.changed', resume);
+                }
+                Talk.on('targets.changed', () => {
+                    updateFriendsList();
+                    updateGroupsList();
+                });
+            };
+            getAndSyncTargets();
+
+            let openChats = () => {
+                let updateFriendsList = () => {
+                    let friends = Talk.getFriends();
+                    updateSelect('open_friends', friends, 'name', 'id');
+                };
+                let updateGroupsList = () => {
+                    let groups = Talk.getGroups();
+                    updateSelect('open_groups', groups, 'name', 'id');
+                };
+                let resume = () => {
+                    let basic = Talk.getBasic();
+                    if (basic) {
+                        if (basic.error) {
+                            updateSelect('open_friends', [basic.error]);
+                            updateSelect('open_groups', [basic.error]);
+                            document.getElementById('open_friends').disabled = true;
+                            document.getElementById('open_groups').disabled = true;
+                            document.getElementById('open_friends_trigger').disabled = true;
+                            document.getElementById('open_groups_trigger').disabled = true;
+                        } else {
+                            updateFriendsList();
+                            updateGroupsList();
+                            document.getElementById('open_friends_trigger').disabled = false;
+                            document.getElementById('open_friends_trigger').onclick = () => {
+                                let source = document.getElementById('open_friends');
+                                let selected = source.options[source.selectedIndex];
+                                Talk.open(selected.value);
+                            };
+                            document.getElementById('open_groups_trigger').disabled = false;
+                            document.getElementById('open_groups_trigger').onclick = () => {
+                                let source = document.getElementById('open_groups');
+                                let selected = source.options[source.selectedIndex];
+                                Talk.open(selected.value);
+                            };
+                        }
+                    }
+                };
+                let basic = Talk.getBasic();
+                if (basic) {
+                    resume();
+                } else {
+                    Talk.on('basic.changed', resume);
+                }
+                Talk.on('targets.changed', () => {
+                    updateFriendsList();
+                    updateGroupsList();
+                });
+            };
+            openChats();
+
+            let draft = () => {
+                document.getElementById('draft').onclick = () => {
+                    let basic = Talk.getBasic();
+                    if (basic &&
+                        !basic.error) {
+                        let friends = Talk.getFriends();
+                        if (friends.length < 2) {
+                            alert('好友数太少，请刷新页面后重试');
+                        } else {
+                            let first = friends[0],
+                                second = friends[1];
+                            Talk.saveDraft(first.id, {
+                                content: '这是草稿测试内容',
+                                start: 2,
+                                end: 5
+                            });
+                            Talk.saveDraft(second.id, {
+                                content: 'hello,magix talk',
+                                start: 2,
+                                end: 2
+                            });
+                            Talk.open(first.id, second.id);
+                        }
+                    }
+                };
+            };
+            draft();
+
+            let closeChat = () => {
+                document.getElementById('close_current').onclick = () => {
+                    let active = Talk.getActive();
+                    if (active) {
+                        Talk.close(active);
+                    }
+                };
+                document.getElementById('close_all').onclick = () => {
+                    Talk.closeAll();
+                };
+            };
+            closeChat();
+
+            let sendMessage = () => {
+                document.getElementById('send_message').onclick = () => {
+                    let basic = Talk.getBasic();
+                    if (basic &&
+                        !basic.error) {
+                        let friends = Talk.getFriends();
+                        if (friends.length < 1) {
+                            alert('好友数太少，请刷新页面后重试');
+                        } else {
+                            let first = friends[0];
+                            Talk.sendMessage(first.id, {
+                                type: 'text',
+                                content: '随机内容：' + Math.random()
+                            })
+                        }
+                    }
+                };
+            };
+            sendMessage();
+
+            let pushMessage = () => {
+                document.getElementById('push_message').onclick = () => {
+                    let basic = Talk.getBasic();
+                    if (basic &&
+                        !basic.error) {
+                        let friends = Talk.getFriends();
+                        if (friends.length < 1) {
+                            alert('好友数太少，请刷新页面后重试');
+                        } else {
+                            let first = friends[0];
+                            Talk.incomeMessages([{
+                                channel: first.id,
+                                from: first.id,
+                                avatar: first.avatar,
+                                type: 'text',
+                                timestamp: Date.now(),
+                                content: '随机内容：' + Math.random()
+                            }]);
+                        }
+                    }
+                };
+            };
+            pushMessage();
+
+            let crash = () => {
+                document.getElementById('crash').onclick = () => {
+                    Service.crash();
+                };
+            };
+            crash();
+
+            let perf=()=>{
+                let current='ms_low'
+                let messageSpeeds=['ms_low','ms_normal','ms_high'];
+                let speedListener=(e)=>{
+                    if(e=='ms_low'){
+                        Service.updateIncomeMessagesSpeed(5000);
+                    }else if(e=='ms_normal'){
+                        Service.updateIncomeMessagesSpeed(1000);
+                    }else{
+                        Service.updateIncomeMessagesSpeed(80);
+                    }
+                    current=e;
+                    updateMS();
+                };
+                let updateMS=()=>{
+                    for(let e of messageSpeeds){
+                        let dest=document.getElementById(e);
+                        if(current==e){
+                            dest.disabled=true;
+                        }else{
+                            dest.disabled=false;
+                        }
+                        dest.onclick=speedListener.bind(dest,e);
+                    }
+                };
+                updateMS();
+
+                let currentTargets='targets_less'
+                let targets=['targets_less','targets_normal','targets_more'];
+                let targetListener=(e)=>{
+                    if(e=='targets_less'){
+                        Service.updateTargets('10-20','10-50');
+                    }else if(e=='targets_normal'){
+                        Service.updateTargets('100-500','100-200');
+                    }else{
+                        Service.updateTargets('800-1200','600-900');
+                    }
+                    currentTargets=e;
+                    updateTargets();
+                };
+                let updateTargets=()=>{
+                    for(let e of targets){
+                        let dest=document.getElementById(e);
+                        if(currentTargets==e){
+                            dest.disabled=true;
+                        }else{
+                            dest.disabled=false;
+                        }
+                        dest.onclick=targetListener.bind(dest,e);
+                    }
+                };
+                updateTargets();
+            };
+            perf();
+        })();
+        </script>
+    </body>
+</html>
